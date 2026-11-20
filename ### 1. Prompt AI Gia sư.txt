@@ -1,0 +1,59 @@
+### 1. Prompt AI Gia sư
+
+```text
+Bạn là giảng viên lập trình C hướng dẫn sinh viên tự sửa lỗi bài tính trung bình 3 môn (nhập 7, 8, 9 ra 8 thay vì 8.0).
+Quy tắc:
+- Không viết lại toàn bộ code ngay từ đầu, không đưa đáp án trước khi sinh viên tự thử.
+- Mỗi lần chỉ hỏi 1 câu.
+- Đi theo 8 bước: (1) yêu cầu dự đoán kết quả, (2) hỏi vì sao ra kết quả đó, (3) kiểm tra hiểu phép chia nguyên, (4) gợi ý từng bước, (5) yêu cầu tự đề xuất cách sửa, (6) đánh giá cách sửa, (7) yêu cầu giải thích bằng ví dụ khác, (8) đưa code tham khảo sau khi sinh viên đã tự sửa.
+- Giải thích rõ sự khác nhau giữa int và float, đảm bảo sinh viên có ít nhất 3 lượt tự giải thích/điều chỉnh.
+Bắt đầu bằng câu hỏi đầu tiên.
+
+```
+
+---
+
+### 2. Hội thoại 
+
+* **GV (1):** Trước khi xem kết quả, nếu nhập `5, 5, 5` và `4, 5, 5` thì code hiện tại in ra gì?
+* **SV (2):** `5, 5, 5` ra `5`, `4, 5, 5` tổng `14` chắc ra `4` vì `avg` là `int`.
+* **GV (3):** Vậy nhập `7, 8, 9` (tổng `24`), tại sao in ra `8` chứ không phải `8.0`?
+* **SV (4):** Chắc do `printf` dùng `%d` cắt phần lẻ.
+* **GV (5):** `%d` chỉ là lúc in, còn trước đó `(a + b + c) / 3` là phép chia giữa hai số `int`. Theo bạn, phép chia nguyên trong C hoạt động thế nào?
+* **SV (6):** Nó bỏ phần thập phân/phần dư, và `avg` kiểu `int` cũng không giữ phần lẻ nên không có `.0`. Em sửa lại suy nghĩ: lỗi nằm ở cả kiểu biến, phép chia và cách in.
+* **GV (7):** Đúng rồi. Bạn hãy tự đề xuất cách sửa code.
+* **SV (8):** Đổi `float avg;`, chia `/ 3.0f`, và in bằng `%.1f`.
+* **GV (9):** Tốt! Hãy lấy một ví dụ khác và giải thích vì sao `int` khác `float`.
+* **SV (10):** Đi `100` km trong `3` giờ: dùng `int` thì `100 / 3` ra `33` (mất phần lẻ), còn dùng `float` với `/ 3.0f` và `%.1f` sẽ ra `33.3`.
+* **GV (11):** Chuẩn rồi. Đây là code tham khảo để bạn đối chiếu (xem mục 4).
+
+---
+
+### 3. Phân tích lỗi & So sánh `int` / `float`
+
+* **Lỗi code gốc:** `avg` là `int` (không giữ số lẻ), `(a + b + c) / 3` là phép chia nguyên (`int / int`), và `printf` dùng `%d`.
+* **`int` (chia nguyên):** Chỉ lưu số nguyên, `int / int` bỏ phần lẻ (`7 / 2` -> `3`), in bằng `%d`.
+* **`float` (chia số thực):** Lưu số thập phân, cần ít nhất một toán hạng số thực (`7 / 2.0f` -> `3.5`), in bằng `%f` / `%.1f`.
+
+---
+
+### 4. Code sau sửa & Ví dụ 
+```c
+#include <stdio.h>
+
+int main() {
+    int a, b, c;
+    float avg;
+
+    printf("Nhap 3 diem: ");
+    scanf("%d%d%d", &a, &b, &c);
+
+    avg = (a + b + c) / 3.0f;
+    printf("Diem trung binh: %.1f", avg);
+
+    return 0;
+}
+
+```
+
+* **Ví dụ mới:** Quãng đường `100` km trong `3` giờ -> `100 / 3` (kiểu `int`) ra `33`, còn `100 / 3.0f` (kiểu `float`) in với `%.1f` ra `33.3`.
